@@ -1,4 +1,4 @@
-import { Box } from "@mui/material"
+import { Box, Toolbar } from "@mui/material"
 /*
 Importación sin archivo de barril:
 import { NavBar } from "../components/NavBar";
@@ -7,7 +7,7 @@ import { SideBar } from "../components/SideBar";*/
 // Con archivo de barril:
 import { NavBar, SideBar } from "../components";
 
-const drawerWidth = 240;
+const drawerWidth = 280;
 
 export const JournalLayout = ({ children }) => {
   return (
@@ -21,7 +21,7 @@ export const JournalLayout = ({ children }) => {
             component = 'main'
             sx = {{ flexGrow: 1, p: 3 }}
         >
-            {/* Toolbar */}
+            <Toolbar/>
 
             { children }
         </Box>
