@@ -3,10 +3,14 @@ import { Google } from "@mui/icons-material"
 import { Button, Grid, Link, TextField, Typography } from "@mui/material"
 import { AuthLayout } from "../layout/AuthLayout";
 import { useForm } from "../../hooks";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { checkingAuthentication, startGoogleSignIn } from "../../store/auth";
+import { useMemo } from "react";
 
 export const LoginPage = () => {
+
+  // Con useSelector, podemos acceder directamente al store. Lo usaremos para bloquear los botones mientras se esté realizando la autenticación.
+  const { status } = useSelector( state => state.auth );
 
   const dispatch = useDispatch();
 
@@ -14,6 +18,9 @@ export const LoginPage = () => {
     email: 'alvaro@gmail.com',
     password: '1234'
   });
+
+  // Si el status cambia, se va a obtener un nuevo valor. Si el status nunca cambia, no se volverá a calcular. El useMemo() "memoriza"
+  const isAuthenticating = useMemo( () => status == "checking", [status] )
 
   const onSubmit = ( event ) => {
     event.preventDefault();
@@ -57,13 +64,18 @@ export const LoginPage = () => {
 
             <Grid container spacing={ 2 } sx = {{ mb: 2, mt: 1 }}>
               <Grid item xs = { 12 } sm = { 6 }>
-                <Button type="submit" variant = 'contained' fullWidth>
+                <Button
+                  disabled={ isAuthenticating }
+                  type="submit"
+                  variant = 'contained'
+                  fullWidth>
                   Login
                 </Button>
               </Grid>
 
               <Grid item xs = { 12 } sm = { 6 }>
                 <Button
+                  disabled={ isAuthenticating }
                   variant = 'contained'
                   fullWidth
                   onClick={ onGoogleSignIn }>
