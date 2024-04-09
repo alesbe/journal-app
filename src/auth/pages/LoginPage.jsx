@@ -7,6 +7,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { checkingAuthentication, startGoogleSignIn } from "../../store/auth";
 import { useMemo } from "react";
 
+const formData = {
+  email: '',
+  password: ''
+}
+
 export const LoginPage = () => {
 
   // Con useSelector, podemos acceder directamente al store. Lo usaremos para bloquear los botones mientras se esté realizando la autenticación.
@@ -14,10 +19,7 @@ export const LoginPage = () => {
 
   const dispatch = useDispatch();
 
-  const { email, password, onInputChange } = useForm({
-    email: 'alvaro@gmail.com',
-    password: '1234'
-  });
+  const { email, password, onInputChange } = useForm(formData);
 
   // Si el status cambia, se va a obtener un nuevo valor. Si el status nunca cambia, no se volverá a calcular. El useMemo() "memoriza"
   const isAuthenticating = useMemo( () => status == "checking", [status] )
