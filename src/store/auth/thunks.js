@@ -1,6 +1,10 @@
-// Los thunks son tareas asincronas a las que se les puede hacer dispatch. Su peculiaridad es que son asíncronas.
+/**
+ * Los thunks son tareas asincronas a las que se les puede hacer dispatch. Su peculiaridad es que son asíncronas.
+ * 
+ * Se usan para, por ejemplo, hacer dispatch al action que deja el estado en checking credentials mientras se ejecuta otro action.
+ */
 
-import { signInWithGoogle } from "../../firebase/providers";
+import { registerUserWithEmailPassword, signInWithGoogle } from "../../firebase/providers";
 import { checkingCredentials, login, logout } from "./";
 
 export const checkingAuthentication = ( email, password ) => {
@@ -22,5 +26,18 @@ export const startGoogleSignIn = () => {
 
         // Si la autenticación sale bien
         dispatch(login( result ));
+    }
+}
+
+export const startCreatingUserWithEmailPassword = ({ email, password, displayName }) => {
+    return async( dispatch ) => {
+        dispatch( checkingCredentials() );
+
+        const { ok, uid, photoURL, errorMessage } = await registerUserWithEmailPassword({ email, password, displayName });
+
+        // Si el registro falla, se llama al action logout y se le pasa errorMessage en un objeto, ya que el action espera un payload con el atributo errorMessage.
+        if( !ok ) return dispatch( logout({errorMessage}) );
+
+        dispatch(login({ uid, displayName, email, photoURL }));
     }
 }
