@@ -1,9 +1,9 @@
 import { Link as RouterLink } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { Button, Grid, Link, TextField, Typography } from "@mui/material"
+import { useDispatch, useSelector } from "react-redux";
+import { Alert, Button, Grid, Link, TextField, Typography } from "@mui/material"
 import { AuthLayout } from "../layout/AuthLayout";
 import { useForm } from "../../hooks";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { startCreatingUserWithEmailPassword } from "../../store/auth";
 
 // Campos del formulario
@@ -26,6 +26,11 @@ export const RegisterPage = () => {
 
   // State para comprobar si el formulario ha sido submitted. Se usa para lanzar los errores en los campos del formulario antes de ser enviado
   const [formSubmitted, setformSubmitted] = useState(false)
+
+  // Con esto obtenemos el estado de la autenticación. Lo usamos para deshablitar el botón de Crear cuenta mientras se esté loguenado.
+  // Usamos useMemo() para que no se esté comprobando cada vez que cambiemos algo del formulario
+  const { status, errorMessage } = useSelector( state => state.auth );
+  const isCheckingAuthentication = useMemo( () => status === 'checking', [status] );
 
   // Custom hook para control del formulario. Controla el state de los campos y se encarga de validarlos.
   const {
@@ -90,8 +95,13 @@ export const RegisterPage = () => {
             </Grid>
 
             <Grid container spacing={ 2 } sx = {{ mb: 2, mt: 1 }}>
+              <Grid item xs = { 12 } display={ !!errorMessage ? '': 'none' }>
+                <Alert severity="error">{ errorMessage }</Alert>
+              </Grid>
+
               <Grid item xs = { 12 }>
                 <Button
+                  disabled={ isCheckingAuthentication }
                   type="submit"
                   variant = 'contained'
                   fullWidth>
