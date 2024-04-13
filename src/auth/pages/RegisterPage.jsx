@@ -1,16 +1,19 @@
 import { Link as RouterLink } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { Button, Grid, Link, TextField, Typography } from "@mui/material"
 import { AuthLayout } from "../layout/AuthLayout";
 import { useForm } from "../../hooks";
 import { useState } from "react";
+import { startCreatingUserWithEmailPassword } from "../../store/auth";
 
+// Campos del formulario
 const formData = {
   email: '',
   password: '',
   displayName: ''
 }
 
-// Estas son las validaciones que le vamos a pasar a nuestro useForm()
+// Validaciones correspondientes a los campos del formulario. Se usan con el useForm()
 const formValidations = {
   email: [ (value) => value.includes('@') , 'El email debe de tener una @'],
   password: [ (value) => value.length >= 6 , 'La contraseña debe tener más de 6 caracteres'],
@@ -18,27 +21,30 @@ const formValidations = {
 }
 
 export const RegisterPage = () => {
-  
+
+  const dispatch = useDispatch();
+
+  // State para comprobar si el formulario ha sido submitted. Se usa para lanzar los errores en los campos del formulario antes de ser enviado
   const [formSubmitted, setformSubmitted] = useState(false)
 
+  // Custom hook para control del formulario. Controla el state de los campos y se encarga de validarlos.
   const {
     formState, displayName, email, password,
     isFormValid, displayNameValid, emailValid, passwordValid,
     onInputChange,
   } = useForm(formData, formValidations);
 
-  console.log( displayNameValid );
-
   const onSubmit = ( event ) => {
     event.preventDefault();
-    
     setformSubmitted(true);
+
+    if(!isFormValid) return;
+
+    dispatch(startCreatingUserWithEmailPassword( formState ));
   }
 
   return (
     <AuthLayout title = 'Crear cuenta'>
-      <h1>FormValid { isFormValid ? 'Valido' : 'Incorrecto' }</h1>
-
       <form onSubmit={ onSubmit }>
           <Grid container>
           <Grid item xs = { 12 } sx = {{ mt: 2 }}>
