@@ -4,7 +4,7 @@
  * Se usan para, por ejemplo, hacer dispatch al action que deja el estado en checking credentials mientras se ejecuta otro action.
  */
 
-import { registerUserWithEmailPassword, signInWithGoogle } from "../../firebase/providers";
+import { loginWithEmailPassword, registerUserWithEmailPassword, signInWithGoogle } from "../../firebase/providers";
 import { checkingCredentials, login, logout } from "./";
 
 export const checkingAuthentication = ( email, password ) => {
@@ -39,5 +39,18 @@ export const startCreatingUserWithEmailPassword = ({ email, password, displayNam
         if( !ok ) return dispatch( logout({errorMessage}) );
 
         dispatch(login({ uid, displayName, email, photoURL }));
+    }
+}
+
+export const startLoginWithEmailPassword = ({ email, password }) => {
+    return async( dispatch ) => {
+        dispatch( checkingCredentials() );
+
+        const res = await loginWithEmailPassword({ email, password });
+        console.log(res);
+
+        if( !res.ok ) return dispatch( logout( res ) );
+        dispatch( login(res) )
+
     }
 }
