@@ -4,7 +4,7 @@
  * Se usan para, por ejemplo, hacer dispatch al action que deja el estado en checking credentials mientras se ejecuta otro action.
  */
 
-import { loginWithEmailPassword, registerUserWithEmailPassword, signInWithGoogle } from "../../firebase/providers";
+import { loginWithEmailPassword, logoutFirebase, registerUserWithEmailPassword, signInWithGoogle } from "../../firebase/providers";
 import { checkingCredentials, login, logout } from "./";
 
 export const checkingAuthentication = ( email, password ) => {
@@ -52,5 +52,14 @@ export const startLoginWithEmailPassword = ({ email, password }) => {
         if( !res.ok ) return dispatch( logout( res ) );
         dispatch( login(res) )
 
+    }
+}
+
+// logoutFirebase() para Firebase, logout() hace el logout en nuestro store, es decir, se encarga de cambiar el estado.
+export const startLogout = () => {
+    return async( dispatch ) => {
+        await logoutFirebase();
+
+        dispatch( logout() );
     }
 }
