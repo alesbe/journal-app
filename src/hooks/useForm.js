@@ -9,6 +9,10 @@ export const useForm = ( initialForm = {}, formValidations = {} ) => {
         createValidators();
     }, [ formState ])
 
+    useEffect(() => {
+        setFormState( initialForm );
+    }, [initialForm])
+
     // Usamos useMemo() para memorizar formState y que solo se vuelva a calcular cuando cambie
     // Este booleano indica si todo el formulario es válido
     const isFormValid = useMemo( () => {
