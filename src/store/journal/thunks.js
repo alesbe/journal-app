@@ -1,6 +1,6 @@
 import { collection, doc, setDoc } from "firebase/firestore/lite";
 import { FirebaseDB } from "../../firebase/config";
-import { addNewEmptyNote, savingNewNote, setActiveNote, setNotes } from "./journalSlice";
+import { addNewEmptyNote, savingNewNote, setActiveNote, setNotes, setSaving, updateNote } from "./journalSlice";
 import { loadNotes } from "../../helpers";
 
 export const startNewNote = () => {
@@ -36,5 +36,23 @@ export const startLoadingNotes = () => {
         console.log(notes);
 
         dispatch( setNotes( notes ) );
+    }
+}
+
+export const startSaveNote = () => {
+    return async( dispatch, getState ) => {
+        dispatch( setSaving() );
+
+        const { uid } = getState().auth;
+        const { active: note } = getState().journal;
+
+        // Vamos a quitar el ID de la nota antes de mandarlo a Firebase. La nota activa del store lo contiene, pero el doc de Firebase no lo contiene como un campo, lo contiene en la url.
+        const noteToFirestore = { ...note };
+        delete noteToFirestore.id;
+
+        const docRef = doc( FirebaseDB, `${ uid }/journal/notes/${ note.id }` );
+        await setDoc( docRef, noteToFirestore, { merge: true } );
+
+        dispatch( updateNote( note ) );
     }
 }
