@@ -25,13 +25,14 @@ export const journalSlice = createSlice({
         },
         setActiveNote: (state, action) => {
             state.active = action.payload;
+            state.messageSaved = '';
         },
         setNotes: (state, action) => {
             state.notes = action.payload;
         },
         setSaving: (state, action) => {
             state.isSaving = true;
-            // TODO Mensaje de error
+            state.messageSaved = '';
         },
         updateNote: (state, action) => {
             // Este action se lanza cuando actualizamos la nota activa, de esta forma se actualiza la lista de notas de manera local con los cambios y se muestran en el sidebar
@@ -44,7 +45,7 @@ export const journalSlice = createSlice({
                 return note;
             } );
 
-            // TODO Mostrar mensaje de update
+            state.messageSaved = `${ action.payload.title } actualizada correctamente`
         },
         deteleNoteById: (state, action) => {
 
