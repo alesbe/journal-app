@@ -2,7 +2,7 @@ import * as React from 'react';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 
-export default function Image({ images }) {
+export default function Image({ images = [] }) {
   return (
     <ImageList sx={{ width: '100%', height: 500 }} cols={4} rowHeight={200}>
       {images.map((image) => (
