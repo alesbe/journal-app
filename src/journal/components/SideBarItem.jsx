@@ -18,6 +18,12 @@ export const SideBarItem = ({ title = '', body, id, date, imageUrls = [] }) => {
             : title;
     }, [title])
 
+    const newBody = useMemo( () => {
+        return body.length > 60
+            ? body.substring(0, 60) + "..."
+            : body;
+    }, [title])
+
   return (
     <ListItem disablePadding>
         <ListItemButton onClick={ onClickNote }>
@@ -27,7 +33,7 @@ export const SideBarItem = ({ title = '', body, id, date, imageUrls = [] }) => {
 
             <Grid container>
                 <ListItemText primary={ newTitle } />
-                <ListItemText secondary={ body } />
+                <ListItemText secondary={ newBody } />
             </Grid>
 
         </ListItemButton>
