@@ -33,4 +33,4 @@ There are some features and design decisions that can be appreciated by develope
 - Private routes
 - Custom Firebase providers
 
-** 🚧 Work in progress! Come back later 🚧 **
+**🚧 Work in progress! Come back later 🚧**
