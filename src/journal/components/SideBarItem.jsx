@@ -22,7 +22,7 @@ export const SideBarItem = ({ title = '', body, id, date, imageUrls = [] }) => {
         return body.length > 60
             ? body.substring(0, 60) + "..."
             : body;
-    }, [title])
+    }, [body])
 
   return (
     <ListItem disablePadding>
