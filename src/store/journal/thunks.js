@@ -59,7 +59,6 @@ export const startUploadingFiles = ( files = [] ) => {
     return async( dispatch ) => {
         dispatch( setSaving() );
 
-        // Vamos a disparar todas las peticiones de manera simultanea resolviendo todas las promesas al mismo tiempo
         const fileUploadPromises = [];
         for (const file of files) {
             fileUploadPromises.push( fileUpload( file ) );
